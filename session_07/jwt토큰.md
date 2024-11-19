@@ -1,4 +1,3 @@
-# 🎰 JWT  
 ## 1. JWT란 ?
 
 > 클라이언트와 서버 간에 정보를 안전하게 교환하기 위한 **토큰 기반 인증 방식**
@@ -52,8 +51,8 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkNvZGU
 
 1. **웹(Web)에서의 사용 사례**
     - **인증(Authentication)**:
-        - 사용자가 로그인 시 서버에서 JWT(Access Token)를 발급받고, 클라이언트는 이 토큰을 Local Storage 또는 쿠키에 저장합니다.
-        - 이후 API 요청 시 `Authorization` 헤더에 JWT를 포함하여 서버에 인증 요청을 보냅니다.
+        - 사용자가 로그인 시 서버에서 JWT(Access Token)를 발급받고, 클라이언트는 이 토큰을 Local Storage 또는 쿠키에 저장
+        - 이후 API 요청 시 `Authorization` 헤더에 JWT를 포함하여 서버에 인증 요청을 보낸다.
         - 예: 쇼핑몰에서 로그인한 사용자의 장바구니 데이터를 불러오기.
     - **권한 관리(Role-Based Authorization)**:
         - Payload에 사용자 역할(Role)을 포함하여 사용자가 특정 페이지나 기능에 접근할 수 있는지 판단.
@@ -106,6 +105,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkNvZGU
         - Refresh Token은 반드시 `HttpOnly` 쿠키로 저장하여 클라이언트 스크립트에서 접근하지 못하도록 함.
         - Refresh Token 요청을 정해진 도메인에서만 처리할 수 있도록 서버에서 제한 설정.
             - 예: `https://auth.example.com/token`으로만 Refresh Token 요청 가능.
+            
 2. **애플리케이션(App)에서 Refresh Token 사용**
     - **앱 내 자동 갱신**:
         - 앱은 만료된 Access Token을 감지하면, Refresh Token을 사용해 새로운 Access Token을 자동으로 요청.
