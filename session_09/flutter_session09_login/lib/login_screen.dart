@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session09_login/service/login/login_service.dart';
 import 'package:flutter_session09_login/sign_up.dart';
+import 'package:flutter_session09_login/sun.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,42 +13,11 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final dio = Dio();
+  LoginService loginservice = LoginService();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordVisible = false;
-
-  Future<void> login() async {
-    if (_formKey.currentState!.validate()) {
-      final username = usernameController.text;
-      final password = passwordController.text;
-
-      try {
-        final response = await dio.post(
-          'https://api.labyrinth30-edu.link/auth/login',
-          data: {'username': username, 'password': password},
-        );
-
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          showSnackBar('Login Successful', Colors.green);
-        } else {
-          showSnackBar('Login failed: ${response.data['message']}', Colors.red);
-        }
-      } on DioException catch (e) {
-        if (e.response != null) {
-          // 서버에서 반환된 오류 처리
-          showSnackBar(
-              'Login failed: ${e.response?.data['message'] ?? 'Unknown error'}',
-              Colors.red);
-        } else {
-          // 네트워크 오류 또는 기타 오류 처리
-          showSnackBar('Network error: ${e.message}', Colors.red);
-        }
-      } catch (e) {
-        showSnackBar('An unexpected error occurred: $e', Colors.red);
-      }
-    }
-  }
 
   void showSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -135,7 +106,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 24),
                         ElevatedButton(
-                          onPressed: login,
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              final username = usernameController.text;
+                              final password = passwordController.text;
+                              final isSuccess =
+                                  await loginservice.login(username, password);
+
+                              if (isSuccess) {
+                                // 로그인 성공 시 처리
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SubScreen()));
+                              }
+                            }
+                          },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 14, horizontal: 50),
@@ -143,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text('Login'),
+                          child: const Text('Login'), // child를 명시적으로 추가
                         ),
                         TextButton(
                           onPressed: () {
